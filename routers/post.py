@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from dto import PostCreateDTO, PostResponseDTO
+from dto import PostCreateDTO, PostResponseDTO, UpdatePost
 from base import get_db
 from model import Post, User
 from security import get_current_user
@@ -42,3 +42,13 @@ def delete_post(post_id: int, db: Session = Depends(get_db), current_user: User 
 def get_my_posts(db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
     posts = db.query(Post).filter(Post.user_id == current_user.id).all()
     return posts
+@router.put("/{post_id}")
+def update_post(post_id: int, post_data: UpdatePost, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
+    post = db.query(Post).filter(Post.id == post_id, Post.user_id == current_user.id).first()
+    if not post:
+        raise HTTPException(status_code=404, detail="Post not found")
+    post.title = post_data.title
+    post.content = post_data.content
+    db.commit()
+    db.refresh(post)
+    return {"message": "Post updated successfully!"}
