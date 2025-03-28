@@ -29,6 +29,10 @@ class PostCreateDTO(BaseModel):
     title: str
     content: str
 
+class UpdatePost(BaseModel):
+    title: str
+    content: str
+
 class PostResponseDTO(BaseModel):
     id: int
     title: str
