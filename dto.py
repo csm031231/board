@@ -59,3 +59,6 @@ class CommentResponseDTO(BaseModel):
 
     class Config:
         orm_mode = True
+
+class CommentUpdateDTO(BaseModel):
+    content: str

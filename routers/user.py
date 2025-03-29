@@ -67,3 +67,7 @@ def update_user(user_data: UpdateUserDTO, db: Session = Depends(get_db), current
     except Exception as e:
         db.rollback()
         raise HTTPException(status_code=400, detail=f"Error updating user: {str(e)}")
+
+@router.get("/me", response_model=UserResponseDTO)
+def get_user(current_user: UserResponseDTO = Depends(get_current_user)):
+    return current_user
